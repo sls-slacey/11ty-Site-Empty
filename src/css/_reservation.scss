@@ -1,0 +1,76 @@
+// Reservation Section Styles
+.reservation {
+  padding: $spacing-4xl 0;
+  background-color: $bg-light;
+  text-align: center;
+
+  &__container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+
+    @media (min-width: $breakpoint-sm) {
+      padding: 0 $spacing-sm;
+    }
+
+    @media (min-width: $breakpoint-md) {
+      padding: 0 $spacing-sm;
+    }
+  }
+
+  &__subtitle {
+    font-family: $font-secondary;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $text-light-gray;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    margin-bottom: $spacing-sm;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-xs;
+    }
+  }
+
+  &__title {
+    font-family: $font-primary;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-semibold;
+    color: $text-black;
+    margin-bottom: $spacing-lg;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-4xl-desktop;
+      margin-bottom: $spacing-xl;
+    }
+  }
+
+  &__description {
+    font-family: $font-secondary;
+    font-size: $font-size-base;
+    color: $text-dark-gray;
+    line-height: 1.6;
+    margin-bottom: $spacing-md;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-lg;
+      margin-bottom: $spacing-lg;
+    }
+  }
+
+  &__cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    //margin-top: $spacing-2xl;
+
+    .btn {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-extrabold;
+      border-radius: 50px; // Rounded corners
+      padding: $spacing-md $spacing-2xl; // More padding for single button
+      white-space: nowrap; // Keep text on single line
+    }
+  }
+}

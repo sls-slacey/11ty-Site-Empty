@@ -1,0 +1,89 @@
+<header class="header" role="banner">
+  <div class="header__container">
+    <!-- Logo -->
+    <a href="{{ '/' | url }}" class="header__logo" aria-label="Creation Restaurant Home">
+      Creation<span>.</span>
+    </a>
+    
+    <!-- Desktop Navigation -->
+    <nav class="header__nav" role="navigation" aria-label="Main navigation">
+      <ul class="header__nav-list">
+        <li>
+          <a href="{{ '/' | url }}" class="header__nav-link">
+            <i class="bi bi-house-door me-2"></i>Home
+          </a>
+        </li>
+        <li>
+          <a href="#about" class="header__nav-link">
+            <i class="bi bi-info-circle me-2"></i>About
+          </a>
+        </li>
+        <li>
+          <a href="#menu" class="header__nav-link">
+            <i class="bi bi-menu-button-wide me-2"></i>Menu
+          </a>
+        </li>
+        <li>
+          <a href="#contact" class="header__nav-link">
+            <i class="bi bi-envelope me-2"></i>Contact
+          </a>
+        </li>
+      </ul>
+    </nav>
+    
+    <!-- Desktop CTA -->
+    {# <div class="header__cta">
+      <a href="#reservation" class="btn btn-primary">
+        <i class="bi bi-calendar-event me-2"></i>Reservation
+      </a>
+    </div> #}
+    
+    <!-- Mobile Menu Toggle -->
+    <button 
+      class="header__mobile-toggle" 
+      aria-label="Toggle mobile menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-bs-toggle="collapse"
+      data-bs-target="#mobile-menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  
+  <!-- Mobile Menu -->
+  <div class="header__mobile-menu collapse" id="mobile-menu">
+    <nav class="header__mobile-nav" role="navigation" aria-label="Mobile navigation">
+      <ul class="header__mobile-list">
+        <li class="header__mobile-item">
+          <a href="{{ '/' | url }}" class="header__mobile-link header__mobile-link--active">
+            <i class="bi bi-house-door me-2"></i>Home
+          </a>
+        </li>
+        <li class="header__mobile-item">
+          <a href="#about" class="header__mobile-link">
+            <i class="bi bi-info-circle me-2"></i>About
+          </a>
+        </li>
+        <li class="header__mobile-item">
+          <a href="#menu" class="header__mobile-link">
+            <i class="bi bi-menu-button-wide me-2"></i>Menu
+          </a>
+        </li>
+        <li class="header__mobile-item">
+          <a href="#contact" class="header__mobile-link">
+            <i class="bi bi-envelope me-2"></i>Contact
+          </a>
+        </li>
+      </ul>
+      
+      {# <div class="header__mobile-cta">
+        <a href="#reservation" class="btn btn-primary">
+          <i class="bi bi-calendar-event me-2"></i>Reservation
+        </a>
+      </div> #}
+    </nav>
+  </div>
+</header> 

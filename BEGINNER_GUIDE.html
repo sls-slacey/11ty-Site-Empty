@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>11ty + SASS + Nunjucks Beginner's Guide</title>
+	<style>
+		:root {
+			--bg-primary: #0d1117;
+			--bg-secondary: #161b22;
+			--bg-tertiary: #21262d;
+			--text-primary: #f0f6fc;
+			--text-secondary: #8b949e;
+			--text-muted: #6e7681;
+			--accent-blue: #58a6ff;
+			--accent-green: #3fb950;
+			--accent-orange: #ff7b2c;
+			--accent-purple: #a855f7;
+			--accent-yellow: #fbbf24;
+			--border-default: #30363d;
+			--border-muted: #21262d;
+			--code-bg: #161b22;
+			--code-border: #30363d;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+			background-color: var(--bg-primary);
+			color: var(--text-primary);
+			line-height: 1.6;
+			font-size: 16px;
+			/* padding-top: 80px; */
+			/* Space for sticky header */
+			margin: 0;
+		}
+
+		.layout {
+			display: block;
+			min-height: 100vh;
+			position: relative;
+		}
+
+		/* Sticky Header Navigation */
+		.top-nav {
+			position: sticky !important;
+			top: 0 !important;
+			left: 0 !important;
+			right: 0 !important;
+			width: 100% !important;
+			height: 70px;
+			background: var(--bg-secondary);
+			border-bottom: 1px solid var(--border-default);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 2rem;
+			z-index: 9999 !important;
+			transition: all 0.3s ease;
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			box-sizing: border-box;
+		}
+
+		.top-nav.scrolled {
+			background: rgba(22, 27, 34, 0.95);
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+			border-bottom-color: var(--accent-blue);
+		}
+
+		.nav-title {
+			color: var(--accent-green);
+			font-size: 1.2rem;
+			font-weight: 600;
+			transition: all 0.2s ease;
+		}
+
+		.top-nav.scrolled .nav-title {
+			color: var(--accent-blue);
+		}
+
+		.nav-dropdown {
+			position: relative;
+		}
+
+		.dropdown-button {
+			background: var(--bg-tertiary);
+			border: 1px solid var(--border-default);
+			border-radius: 8px;
+			color: var(--text-primary);
+			padding: 0.75rem 1.5rem;
+			font-size: 0.9rem;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			transition: all 0.2s ease;
+		}
+
+		.dropdown-button:hover,
+		.top-nav.scrolled .dropdown-button {
+			background: var(--bg-primary);
+			border-color: var(--accent-blue);
+			box-shadow: 0 2px 8px rgba(88, 166, 255, 0.2);
+		}
+
+		.dropdown-arrow {
+			transition: transform 0.2s ease;
+		}
+
+		.nav-dropdown.open .dropdown-arrow {
+			transform: rotate(180deg);
+		}
+
+		.dropdown-menu {
+			position: absolute;
+			top: calc(100% + 0.5rem);
+			right: 0;
+			min-width: 300px;
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-default);
+			border-radius: 12px;
+			padding: 1rem;
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.2s ease;
+			max-height: 70vh;
+			overflow-y: auto;
+			z-index: 10000 !important;
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+		}
+
+		.nav-dropdown.open .dropdown-menu {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.dropdown-menu ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.dropdown-menu li {
+			margin-bottom: 0.25rem;
+		}
+
+		.dropdown-menu a {
+			color: var(--text-secondary);
+			text-decoration: none;
+			padding: 0.5rem 0.75rem;
+			border-radius: 6px;
+			transition: all 0.2s ease;
+			display: block;
+			font-size: 0.9rem;
+		}
+
+		.dropdown-menu a:hover {
+			background: var(--bg-tertiary);
+			color: var(--accent-blue);
+		}
+
+		.main-content {
+			flex: 1;
+			min-height: 100vh;
+			position: relative;
+		}
+
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 2rem;
+			position: relative;
+		}
+
+		.header {
+			text-align: center;
+			margin-bottom: 3rem;
+			padding: 2rem 0;
+			border-bottom: 1px solid var(--border-default);
+		}
+
+		h1 {
+			font-size: 3rem;
+			font-weight: 700;
+			background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			margin-bottom: 1rem;
+		}
+
+		.subtitle {
+			font-size: 1.25rem;
+			color: var(--text-secondary);
+			font-weight: 400;
+		}
+
+		.section {
+			margin-bottom: 3rem;
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-default);
+			border-radius: 12px;
+			padding: 2rem;
+			position: relative;
+		}
+
+		.section::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 6px;
+			background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-orange));
+			border-radius: 12px 12px 0 0;
+		}
+
+		h2 {
+			font-size: 2rem;
+			margin-bottom: 1.5rem;
+			color: var(--text-primary);
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		h3 {
+			font-size: 1.5rem;
+			margin: 2rem 0 1rem 0;
+			color: var(--accent-green);
+		}
+
+		h4 {
+			font-size: 1.25rem;
+			margin: 1.5rem 0 0.75rem 0;
+			color: var(--accent-orange);
+		}
+
+		p {
+			margin-bottom: 1rem;
+			color: var(--text-secondary);
+		}
+
+		strong {
+			color: var(--text-primary);
+			font-weight: 600;
+		}
+
+		ul,
+		ol {
+			margin: 1rem 0;
+			padding-left: 2rem;
+		}
+
+		li {
+			margin-bottom: 0.5rem;
+			color: var(--text-secondary);
+		}
+
+		.code-block {
+			background: var(--code-bg);
+			border: 1px solid var(--code-border);
+			border-radius: 8px;
+			padding: 1.5rem;
+			margin: 1rem 0;
+			overflow-x: auto;
+			position: relative;
+		}
+
+		.code-block::before {
+			content: attr(data-lang);
+			position: absolute;
+			top: 0.5rem;
+			right: 1rem;
+			font-size: 0.75rem;
+			color: var(--text-muted);
+			text-transform: uppercase;
+			font-weight: 600;
+		}
+
+		.command-list {
+			margin: 1.5rem 0;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1.5rem;
+			align-items: stretch;
+		}
+
+		.command-item {
+			flex: 1;
+			min-width: 300px;
+			margin-bottom: 0;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.command-title {
+			color: var(--text-primary);
+			font-weight: 600;
+			margin-bottom: 0.5rem;
+			font-size: 0.95rem;
+		}
+
+		.command-item .code-block {
+			margin: 0.5rem 0 0 0;
+			flex: 1;
+		}
+
+		code {
+			font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
+			font-size: 0.9rem;
+			line-height: 1.5;
+		}
+
+		.inline-code {
+			background: var(--bg-tertiary);
+			color: var(--accent-orange);
+			padding: 0.2rem 0.4rem;
+			border-radius: 4px;
+			font-size: 0.9em;
+		}
+
+		.tree {
+			background: var(--code-bg);
+			border: 1px solid var(--code-border);
+			border-radius: 8px;
+			padding: 2rem;
+			font-family: 'SF Mono', Monaco, monospace;
+			font-size: 0.95rem;
+			line-height: 1.8;
+			color: var(--text-primary);
+			margin: 1rem 0;
+			overflow-x: auto;
+			white-space: nowrap;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.tree-line {
+			display: block;
+			margin-bottom: 0.1rem;
+			white-space: pre;
+		}
+
+		.tree-folder {
+			color: var(--accent-blue);
+			font-weight: 600;
+		}
+
+		.tree-file {
+			color: var(--text-secondary);
+		}
+
+		.tree-comment {
+			color: var(--accent-green);
+			font-style: italic;
+		}
+
+		.tree-special {
+			color: var(--accent-orange);
+			font-weight: 500;
+		}
+
+		.tree-config {
+			color: var(--accent-purple);
+			font-weight: 500;
+		}
+
+		.badge {
+			display: inline-block;
+			padding: 0.25rem 0.75rem;
+			border-radius: 20px;
+			font-size: 0.8rem;
+			font-weight: 600;
+			margin: 0.25rem;
+		}
+
+		.badge-blue {
+			background: var(--accent-blue);
+			color: white;
+		}
+
+		.badge-green {
+			background: var(--accent-green);
+			color: white;
+		}
+
+		.badge-orange {
+			background: var(--accent-orange);
+			color: white;
+		}
+
+		.badge-purple {
+			background: var(--accent-purple);
+			color: white;
+		}
+
+		.tech-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: 1rem;
+			margin: 1.5rem 0;
+		}
+
+		.tech-card {
+			background: var(--bg-tertiary);
+			border: 1px solid var(--border-muted);
+			border-radius: 8px;
+			padding: 1.5rem;
+			text-align: center;
+			transition: transform 0.2s ease, border-color 0.2s ease;
+		}
+
+		.tech-card:hover {
+			transform: translateY(-2px);
+			border-color: var(--accent-blue);
+		}
+
+		.tech-icon {
+			font-size: 2rem;
+			margin-bottom: 1rem;
+		}
+
+		.alert {
+			padding: 1rem 1.5rem;
+			border-radius: 8px;
+			margin: 1rem 0;
+			border-left: 4px solid;
+		}
+
+		.alert-info {
+			background: rgba(88, 166, 255, 0.1);
+			border-color: var(--accent-blue);
+			color: var(--accent-blue);
+		}
+
+		.alert-success {
+			background: rgba(63, 185, 80, 0.1);
+			border-color: var(--accent-green);
+			color: var(--accent-green);
+		}
+
+		.alert-warning {
+			background: rgba(255, 123, 44, 0.1);
+			border-color: var(--accent-orange);
+			color: var(--accent-orange);
+		}
+
+		.qa-section {
+			background: var(--bg-tertiary);
+			border-radius: 8px;
+			padding: 1rem;
+			margin: 0.5rem 0;
+		}
+
+		.question {
+			font-weight: 600;
+			color: var(--accent-blue);
+			margin-bottom: 0.5rem;
+		}
+
+		.answer {
+			color: var(--text-secondary);
+		}
+
+		a {
+			color: var(--accent-blue);
+			text-decoration: none;
+			transition: color 0.2s ease;
+		}
+
+		a:hover {
+			color: var(--accent-purple);
+		}
+
+		.footer {
+			text-align: center;
+			padding: 2rem 0;
+			border-top: 1px solid var(--border-default);
+			margin-top: 3rem;
+			color: var(--text-muted);
+		}
+
+		.scroll-indicator {
+			position: fixed !important;
+			top: 70px !important;
+			left: 0 !important;
+			right: 0 !important;
+			width: 100% !important;
+			height: 3px;
+			background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-orange));
+			transform-origin: left;
+			transform: scaleX(var(--scroll, 0));
+			z-index: 9998 !important;
+		}
+
+		/* Mobile Responsive */
+		@media (max-width: 768px) {
+
+			.top-nav {
+				padding: 0 1rem;
+			}
+
+			.nav-title {
+				font-size: 1rem;
+			}
+
+			.dropdown-button {
+				padding: 0.5rem 1rem;
+				font-size: 0.85rem;
+			}
+
+			.dropdown-menu {
+				min-width: 250px;
+				right: -1rem;
+			}
+
+			.container {
+				padding: 1rem;
+			}
+
+			h1 {
+				font-size: 2rem;
+			}
+
+			.section {
+				padding: 1.5rem;
+			}
+
+			/* Mobile Tree Styling */
+			.tree {
+				padding: 1rem;
+				font-size: 0.8rem;
+				line-height: 1.6;
+			}
+
+			.tree-comment {
+				display: block;
+				color: var(--text-muted);
+				font-style: normal;
+				margin-left: 0;
+				padding-left: 1rem;
+				font-size: 0.75rem;
+			}
+
+			.tech-grid {
+				grid-template-columns: 1fr;
+				gap: 0.75rem;
+			}
+
+			.tech-card {
+				padding: 1rem;
+			}
+
+			/* Tablet command layout - full width */
+			.command-item {
+				min-width: 100%;
+				flex: 1 1 100%;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.nav-title {
+				font-size: 0.9rem;
+			}
+
+			.dropdown-button {
+				padding: 0.4rem 0.8rem;
+				font-size: 0.8rem;
+			}
+
+			.dropdown-menu {
+				/* min-width: 200px; */
+				right: -0.5rem;
+			}
+
+			.container {
+				padding: 0.75rem;
+			}
+
+			.section {
+				padding: 1rem;
+			}
+
+			/* Extra small mobile tree styling */
+			.tree {
+				padding: 1rem;
+				font-size: 1rem;
+				line-height: 1.5;
+				border-radius: 6px;
+			}
+
+			.tree-comment {
+				display: none;
+				color: var(--text-muted);
+				font-style: normal;
+				margin-left: 0;
+				padding-left: 0.75rem;
+				font-size: 0.7rem;
+				margin-top: 0.1rem;
+			}
+
+			h1 {
+				font-size: 1.75rem;
+			}
+
+			h2 {
+				font-size: 1.5rem;
+			}
+
+			.tech-icon {
+				font-size: 1.5rem;
+			}
+
+			/* Mobile command layout - stacked vertically */
+			.command-list {
+				flex-direction: column;
+				gap: 1rem;
+			}
+
+			.command-item {
+				min-width: 100%;
+				flex: 1 1 100%;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="scroll-indicator"></div>
+
+	<div class="layout">
+		<div class="top-nav">
+			<div class="nav-title">Table of Contents</div>
+			<div class="nav-dropdown">
+				<button class="dropdown-button">
+					<span>Contents</span>
+					<span class="dropdown-arrow">▼</span>
+				</button>
+				<div class="dropdown-menu">
+					<ul>
+						<li><a href="#what-is-this">🚀 What is This Project?</a></li>
+						<li><a href="#project-structure">📁 Project Structure</a></li>
+						<li><a href="#getting-started">🛠️ Getting Started</a></li>
+						<li><a href="#sass">🎨 Understanding SASS</a></li>
+						<li><a href="#purgecss">🧹 PurgeCSS Optimization</a></li>
+						<li><a href="#nunjucks">🔧 Nunjucks Templates</a></li>
+						<li><a href="#eleventy">⚡ Eleventy (11ty)</a></li>
+						<li><a href="#making-changes">🎯 Making Changes</a></li>
+						<li><a href="#debugging">🔍 Debugging Tips</a></li>
+						<li><a href="#deployment">🚀 Deployment</a></li>
+						<li><a href="#resources">📚 Resources</a></li>
+						<li><a href="#faq">❓ FAQ</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="main-content">
+			<div class="container">
+				<header class="header">
+					<h1>11ty + SASS + Nunjucks</h1>
+					<p class="subtitle">Complete Beginner's Guide to Modern Static Site Development</p>
+				</header>
+
+				<section id="what-is-this" class="section">
+					<h2>🚀 What is This Project?</h2>
+					<p>This is a <strong>restaurant website</strong> built with modern web development tools that work
+						together
+						to create fast, maintainable, and SEO-friendly websites.</p>
+
+					<div class="tech-grid">
+						<div class="tech-card">
+							<div class="tech-icon">⚡</div>
+							<h4>Eleventy (11ty)</h4>
+							<p>A static site generator that builds fast, SEO-friendly websites</p>
+						</div>
+						<div class="tech-card">
+							<div class="tech-icon">🎨</div>
+							<h4>SASS</h4>
+							<p>A CSS preprocessor that makes styling more powerful and organized</p>
+						</div>
+						<div class="tech-card">
+							<div class="tech-icon">🔧</div>
+							<h4>Nunjucks</h4>
+							<p>A templating language that lets you create reusable HTML components</p>
+						</div>
+						<div class="tech-card">
+							<div class="tech-icon">📱</div>
+							<h4>Bootstrap</h4>
+							<p>CSS framework for responsive design and components</p>
+						</div>
+					</div>
+				</section>
+
+				<section id="project-structure" class="section">
+					<h2>📁 Project Structure</h2>
+					<div class="tree">
+						<span class="tree-line"><span class="tree-folder">11ty-sass-skeleton/</span></span>
+						<span class="tree-line">├── <span class="tree-folder">src/</span> <span class="tree-comment">#
+								Source files (where you edit)</span></span>
+						<span class="tree-line">│ ├── <span class="tree-folder">_includes/</span> <span
+								class="tree-comment"># Reusable template components</span></span>
+						<span class="tree-line">│ │ ├── <span class="tree-file">base.njk</span> <span
+								class="tree-comment"># Main HTML layout</span></span>
+						<span class="tree-line">│ │ ├── <span class="tree-file">header.njk</span> <span
+								class="tree-comment"># Navigation/header</span></span>
+						<span class="tree-line">│ │ ├── <span class="tree-file">footer.njk</span> <span
+								class="tree-comment"># Footer</span></span>
+						<span class="tree-line">│ │ ├── <span class="tree-file">hero.njk</span> <span
+								class="tree-comment"># Hero section</span></span>
+						<span class="tree-line">│ │ └── <span class="tree-file">...</span> <span class="tree-comment">#
+								Other components</span></span>
+						<span class="tree-line">│ ├── <span class="tree-folder">css/</span> <span class="tree-comment">#
+								SASS stylesheets</span></span>
+						<span class="tree-line">│ │ ├── <span class="tree-special">style.scss</span> <span
+								class="tree-comment"># Main stylesheet (imports everything)</span></span>
+						<span class="tree-line">│ │ ├── <span class="tree-special">_theme.scss</span> <span
+								class="tree-comment"># Variables (colors, fonts, spacing)</span></span>
+						<span class="tree-line">│ │ ├── <span class="tree-special">_header.scss</span> <span
+								class="tree-comment"># Header component styles</span></span>
+						<span class="tree-line">│ │ └── <span class="tree-file">...</span> <span class="tree-comment">#
+								Other component styles</span></span>
+						<span class="tree-line">│ ├── <span class="tree-folder">images/</span> <span
+								class="tree-comment"># Image assets</span></span>
+						<span class="tree-line">│ └── <span class="tree-file">index.njk</span> <span
+								class="tree-comment"># Homepage template</span></span>
+						<span class="tree-line">├── <span class="tree-folder">public/</span> <span
+								class="tree-comment"># Generated website (don't edit directly)</span></span>
+						<span class="tree-line">├── <span class="tree-config">.eleventy.js</span> <span
+								class="tree-comment"># 11ty configuration</span></span>
+						<span class="tree-line">├── <span class="tree-config">package.json</span> <span
+								class="tree-comment"># Project dependencies</span></span>
+						<span class="tree-line">└── <span class="tree-file">README.md</span> <span
+								class="tree-comment"># Project documentation</span></span>
+					</div>
+				</section>
+
+				<section id="getting-started" class="section">
+					<h2>🛠️ Getting Started</h2>
+
+					<h3>Prerequisites</h3>
+					<p>You need <strong>Node.js</strong> installed on your computer. Download it from <a
+							href="https://nodejs.org/" target="_blank">nodejs.org</a>.</p>
+
+					<h3>Installation</h3>
+					<ol>
+						<li><strong>Clone or download</strong> this project</li>
+						<li><strong>Open terminal</strong> in the project folder</li>
+						<li><strong>Install dependencies</strong>:</li>
+					</ol>
+
+					<div class="code-block" data-lang="bash">
+						<code>npm install</code>
+					</div>
+
+					<h3>Development Commands</h3>
+					<div class="command-list">
+						<div class="command-item">
+							<div class="command-title">Start development server with live reload:</div>
+							<div class="code-block" data-lang="bash">
+								<code>npm start</code>
+							</div>
+						</div>
+
+						<div class="command-item">
+							<div class="command-title">Build the website for production:</div>
+							<div class="code-block" data-lang="bash">
+								<code>npm run build</code>
+							</div>
+						</div>
+
+						<div class="command-item">
+							<div class="command-title">Optimized build (removes unused CSS):</div>
+							<div class="code-block" data-lang="bash">
+								<code>npm run build:prod</code>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section id="sass" class="section">
+					<h2>🎨 Understanding SASS</h2>
+					<p><strong>SASS</strong> makes CSS more powerful by adding variables, nesting, and imports.</p>
+
+					<h3>Key SASS Files:</h3>
+					<ul>
+						<li><span class="inline-code">src/css/style.scss</span>: Main file that imports everything</li>
+						<li><span class="inline-code">src/css/_theme.scss</span>: Contains all variables (colors, fonts,
+							spacing)</li>
+						<li><span class="inline-code">src/css/_[component].scss</span>: Individual component styles</li>
+					</ul>
+
+					<h3>Example SASS Features:</h3>
+					<div class="command-list">
+						<div class="command-item">
+							<div class="command-title">Variables (in <span class="inline-code">_theme.scss</span>):
+							</div>
+							<div class="code-block" data-lang="scss">
+								<code>$primary-color: #e5952d;<br>
+									$font-primary: "Playfair Display", serif;<br>
+									$spacing-lg: 1.5rem;</code>
+							</div>
+						</div>
+
+						<div class="command-item">
+							<div class="command-title">Using Variables:</div>
+							<div class="code-block" data-lang="scss">
+								<code>.my-element {<br>
+									&nbsp;&nbsp;color: $primary-color;<br>
+									&nbsp;&nbsp;font-family: $font-primary;<br>
+									&nbsp;&nbsp;margin-bottom: $spacing-lg;<br>
+									}</code>
+							</div>
+						</div>
+
+						<div class="command-item">
+							<div class="command-title">Nesting:</div>
+							<div class="code-block" data-lang="scss">
+								<code>.header {
+									<br>background: white;<br>
+
+									&nbsp;&nbsp;&__logo {
+									font-size: 2rem;
+									}<br>
+
+									&nbsp;&nbsp;&__nav {
+									display: flex;
+									}<br>
+									}</code>
+							</div>
+						</div>
+					</div>
+
+					<div class="alert alert-info">
+						<strong>📚 Learn More About SASS:</strong><br>
+						• <a href="https://sass-lang.com/documentation" target="_blank">SASS Official
+							Documentation</a><br>
+						• <a href="https://sass-lang.com/guide" target="_blank">SASS Basics Tutorial</a>
+					</div>
+				</section>
+
+				<section id="purgecss" class="section">
+					<h2>🧹 Understanding PurgeCSS (CSS Optimization)</h2>
+					<p><strong>PurgeCSS</strong> automatically removes unused CSS from your website to make it faster
+						and
+						smaller.</p>
+
+					<h3>What It Does:</h3>
+					<p>When you use frameworks like <strong>Bootstrap</strong>, they include thousands of CSS classes.
+						But your
+						website probably only uses a small fraction of them. PurgeCSS scans your HTML files and removes
+						any CSS
+						that isn't actually being used.</p>
+
+					<h3>How It Works in This Project:</h3>
+					<ul>
+						<li><span class="badge badge-green">Development</span>: PurgeCSS is turned OFF so you can use
+							any
+							Bootstrap class while coding</li>
+						<li><span class="badge badge-orange">Production</span>: When you run <span
+								class="inline-code">npm run
+								build:prod</span>, PurgeCSS automatically removes unused CSS</li>
+					</ul>
+
+					<h3>Configuration (<span class="inline-code">purgecss.config.js</span>):</h3>
+					<div class="code-block" data-lang="javascript">
+						<code>module.exports = {
+							// Scan these files for CSS class usage
+							content: ["./public/**/*.html"],
+
+							// Clean up these CSS files
+							css: ["./public/**/*.css"],
+
+							// Keep these classes even if not detected
+							safelist: [
+							"show",
+							"hide",
+							"collapse", // Bootstrap JS classes
+							/^bi-/, // Bootstrap Icons
+							// Add your own classes here if needed
+							],
+							};</code>
+					</div>
+
+					<h3>Key Points for Beginners:</h3>
+					<ul>
+						<li><strong>Don't worry about it during development</strong> - just code normally</li>
+						<li><strong>Automatic optimization</strong> - runs only in production builds</li>
+						<li><strong>Safelist protects important classes</strong> - like those added by JavaScript</li>
+						<li><strong>Huge file size savings</strong> - can reduce CSS by 90%+ in some cases</li>
+					</ul>
+
+					<h3>When You Might Need to Edit It:</h3>
+					<ul>
+						<li>If you use dynamic CSS classes in JavaScript that PurgeCSS can't detect</li>
+						<li>If you have custom CSS classes that get removed accidentally</li>
+						<li>Add them to the <span class="inline-code">safelist</span> array to protect them</li>
+					</ul>
+
+					<div class="alert alert-warning">
+						<strong>Example:</strong> If you add CSS classes with JavaScript like <span
+							class="inline-code">element.classList.add('my-dynamic-class')</span>, you should add <span
+							class="inline-code">'my-dynamic-class'</span> to the safelist.
+					</div>
+
+					<div class="alert alert-info">
+						<strong>📚 Learn More About PurgeCSS:</strong><br>
+						• <a href="https://purgecss.com/" target="_blank">PurgeCSS Official Documentation</a>
+					</div>
+				</section>
+
+				<section id="nunjucks" class="section">
+					<h2>🔧 Understanding Nunjucks Templates</h2>
+					<p><strong>Nunjucks</strong> lets you create reusable HTML components and layouts.</p>
+
+					<h3>Key Concepts:</h3>
+
+					<h4>Layout Template (<span class="inline-code">src/_includes/base.njk</span>):</h4>
+					<div class="code-block" data-lang="html">
+						<code>&lt;!DOCTYPE html&gt;
+							&lt;html&gt;
+							&lt;head&gt;
+							&lt;title&gt;{{ title }}&lt;/title&gt;
+							&lt;/head&gt;
+							&lt;body&gt;
+							{{ content | safe }}
+							&lt;/body&gt;
+							&lt;/html&gt;</code>
+					</div>
+
+					<h4>Page Template (<span class="inline-code">src/index.njk</span>):</h4>
+					<div class="code-block" data-lang="html">
+						<code>---
+							layout: base.njk
+							title: My Page Title
+							---
+
+							&lt;h1&gt;Welcome to my page!&lt;/h1&gt;
+							{% include "hero.njk" %}</code>
+					</div>
+
+					<h4>Component Template (<span class="inline-code">src/_includes/hero.njk</span>):</h4>
+					<div class="code-block" data-lang="html">
+						<code>&lt;section class="hero"&gt;
+							&lt;h1&gt;{{ title or "Default Title" }}&lt;/h1&gt;
+							&lt;/section&gt;</code>
+					</div>
+
+					<h3>Common Nunjucks Features:</h3>
+					<ul>
+						<li><span class="inline-code">{{ variable }}</span>: Output a variable</li>
+						<li><span class="inline-code">{% include "file.njk" %}</span>: Include another template</li>
+						<li><span class="inline-code">{% if condition %}</span>: Conditional content</li>
+						<li><span class="inline-code">{% for item in items %}</span>: Loop through data</li>
+					</ul>
+
+					<div class="alert alert-info">
+						<strong>📚 Learn More About Nunjucks:</strong><br>
+						• <a href="https://mozilla.github.io/nunjucks/" target="_blank">Nunjucks Official
+							Documentation</a><br>
+						• <a href="https://www.11ty.dev/docs/languages/nunjucks/" target="_blank">11ty Nunjucks
+							Guide</a>
+					</div>
+				</section>
+
+				<section id="eleventy" class="section">
+					<h2>⚡ Understanding Eleventy (11ty)</h2>
+					<p><strong>Eleventy</strong> is the static site generator that builds your website from templates
+						and
+						content.</p>
+
+					<h3>Key Files:</h3>
+					<ul>
+						<li><span class="inline-code">.eleventy.js</span>: Configuration file</li>
+						<li><span class="inline-code">src/</span>: Source directory (where you work)</li>
+						<li><span class="inline-code">public/</span>: Output directory (generated website)</li>
+					</ul>
+
+					<h3>How It Works:</h3>
+					<ol>
+						<li><strong>Templates</strong> (<span class="inline-code">.njk</span> files) get processed</li>
+						<li><strong>SASS</strong> files get compiled to CSS</li>
+						<li><strong>Images</strong> get copied to the output</li>
+						<li><strong>Static HTML</strong> files are generated in <span class="inline-code">public/</span>
+						</li>
+					</ol>
+
+					<div class="alert alert-info">
+						<strong>📚 Learn More About 11ty:</strong><br>
+						• <a href="https://www.11ty.dev/docs/" target="_blank">11ty Official Documentation</a><br>
+						• <a href="https://www.11ty.dev/docs/getting-started/" target="_blank">11ty Getting Started
+							Guide</a>
+					</div>
+				</section>
+
+				<section id="making-changes" class="section">
+					<h2>🎯 Making Changes</h2>
+
+					<h3>Adding New Content:</h3>
+					<ol>
+						<li><strong>Edit templates</strong> in <span class="inline-code">src/_includes/</span></li>
+						<li><strong>Add new pages</strong> by creating <span class="inline-code">.njk</span> files in
+							<span class="inline-code">src/</span>
+						</li>
+						<li><strong>Update styles</strong> in the appropriate <span
+								class="inline-code">src/css/_[component].scss</span> file</li>
+					</ol>
+
+					<h3>Styling Workflow:</h3>
+					<ol>
+						<li><strong>Find the component</strong> you want to style (e.g., <span
+								class="inline-code">hero.njk</span>)</li>
+						<li><strong>Open the matching SASS file</strong> (e.g., <span
+								class="inline-code">_hero.scss</span>)
+						</li>
+						<li><strong>Use variables</strong> from <span class="inline-code">_theme.scss</span> for
+							consistency
+						</li>
+						<li><strong>Follow the BEM naming convention</strong>: <span
+								class="inline-code">.block__element--modifier</span></li>
+					</ol>
+
+					<h3>Example: Adding a New Section</h3>
+					<ol>
+						<li><strong>Create template</strong>: <span
+								class="inline-code">src/_includes/my-section.njk</span></li>
+						<li><strong>Create styles</strong>: <span class="inline-code">src/css/_my-section.scss</span>
+						</li>
+						<li><strong>Import styles</strong>: Add <span class="inline-code">@import "my-section";</span>
+							to <span class="inline-code">src/css/style.scss</span></li>
+						<li><strong>Include in page</strong>: Add <span class="inline-code">{% include "my-section.njk"
+								%}</span> to <span class="inline-code">src/index.njk</span></li>
+					</ol>
+				</section>
+
+				<section id="debugging" class="section">
+					<h2>🔍 Debugging Tips</h2>
+
+					<h3>If Styles Aren't Working:</h3>
+					<ul>
+						<li>Check if you imported the SASS file in <span class="inline-code">style.scss</span></li>
+						<li>Verify variable names match those in <span class="inline-code">_theme.scss</span></li>
+						<li>Use browser dev tools to inspect elements</li>
+					</ul>
+
+					<h3>If Templates Aren't Working:</h3>
+					<ul>
+						<li>Check file paths and names (case-sensitive)</li>
+						<li>Verify Nunjucks syntax</li>
+						<li>Look for error messages in the terminal</li>
+					</ul>
+
+					<h3>If Build Fails:</h3>
+					<ul>
+						<li>Check terminal for error messages</li>
+						<li>Verify all file paths are correct</li>
+						<li>Make sure all imports exist</li>
+					</ul>
+				</section>
+
+				<section id="deployment" class="section">
+					<h2>🚀 Deployment</h2>
+					<p>After running <span class="inline-code">npm run build:prod</span>:</p>
+					<ol>
+						<li>The <span class="inline-code">public/</span> folder contains your complete website</li>
+						<li>Upload this folder to any web host</li>
+						<li>Popular options: <a href="https://netlify.com" target="_blank">Netlify</a>, <a
+								href="https://vercel.com" target="_blank">Vercel</a>, <a href="https://pages.github.com"
+								target="_blank">GitHub Pages</a></li>
+					</ol>
+
+					<div class="alert alert-success">
+						<strong>💡 Pro Tip:</strong> Many hosts like Netlify and Vercel can automatically deploy from
+						your Git
+						repository!
+					</div>
+				</section>
+
+				<section id="resources" class="section">
+					<h2>📚 Additional Resources</h2>
+
+					<h3>Documentation:</h3>
+					<ul>
+						<li><a href="https://www.11ty.dev/docs/" target="_blank">Eleventy Documentation</a></li>
+						<li><a href="https://sass-lang.com/documentation" target="_blank">SASS Documentation</a></li>
+						<li><a href="https://mozilla.github.io/nunjucks/" target="_blank">Nunjucks Documentation</a>
+						</li>
+						<li><a href="https://getbootstrap.com/docs/" target="_blank">Bootstrap Documentation</a></li>
+					</ul>
+
+					<h3>Tutorials:</h3>
+					<ul>
+						<li><a href="https://www.11ty.dev/docs/tutorials/" target="_blank">11ty Tutorial Series</a></li>
+						<li><a href="https://sass-lang.com/guide" target="_blank">SASS Tutorial</a></li>
+						<li><a href="https://www.netlify.com/blog/2020/04/14/what-is-a-static-site-generator-and-3-ways-to-find-the-best-one/"
+								target="_blank">Static Site Generator Basics</a></li>
+					</ul>
+
+					<h3>Community:</h3>
+					<ul>
+						<li><a href="https://discord.gg/GBkBy9u" target="_blank">11ty Discord</a></li>
+						<li><a href="https://github.com/11ty/eleventy/discussions" target="_blank">11ty GitHub
+								Discussions</a>
+						</li>
+					</ul>
+				</section>
+
+				<section id="faq" class="section">
+					<h2>❓ Common Questions</h2>
+
+					<div class="qa-section">
+						<div class="question">Q: Where do I change the website colors?</div>
+						<div class="answer">A: Edit the color variables in <span
+								class="inline-code">src/css/_theme.scss</span>
+						</div>
+					</div>
+
+					<div class="qa-section">
+						<div class="question">Q: How do I add a new page?</div>
+						<div class="answer">A: Create a new <span class="inline-code">.njk</span> file in the <span
+								class="inline-code">src/</span> directory</div>
+					</div>
+
+					<div class="qa-section">
+						<div class="question">Q: Why isn't my CSS working?</div>
+						<div class="answer">A: Make sure you imported your SASS file in <span
+								class="inline-code">src/css/style.scss</span></div>
+					</div>
+
+					<div class="qa-section">
+						<div class="question">Q: How do I add images?</div>
+						<div class="answer">A: Put images in <span class="inline-code">src/images/</span> and reference
+							them as
+							<span class="inline-code">/images/filename.jpg</span>
+						</div>
+					</div>
+				</section>
+
+				<footer class="footer">
+					<p><strong>Happy coding!</strong> 🎉 Remember: start small, make one change at a time, and use the
+						browser's
+						developer tools to debug issues.</p>
+				</footer>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Dropdown menu functionality
+		const dropdown = document.querySelector('.nav-dropdown');
+		const dropdownButton = document.querySelector('.dropdown-button');
+		const dropdownMenu = document.querySelector('.dropdown-menu');
+		const topNav = document.querySelector('.top-nav');
+
+		// Toggle dropdown
+		dropdownButton.addEventListener('click', (e) => {
+			e.stopPropagation();
+			dropdown.classList.toggle('open');
+		});
+
+		// Close dropdown when clicking outside
+		document.addEventListener('click', (e) => {
+			if (!dropdown.contains(e.target)) {
+				dropdown.classList.remove('open');
+			}
+		});
+
+		// Close dropdown when clicking on a link
+		document.querySelectorAll('.dropdown-menu a').forEach(link => {
+			link.addEventListener('click', () => {
+				dropdown.classList.remove('open');
+			});
+		});
+
+		// Enhanced sticky header with scroll effects
+		let lastScrollTop = 0;
+		window.addEventListener('scroll', () => {
+			const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+			// Add scrolled class when user scrolls down
+			if (scrollTop > 50) {
+				topNav.classList.add('scrolled');
+			} else {
+				topNav.classList.remove('scrolled');
+			}
+
+			lastScrollTop = scrollTop;
+		});
+
+		// Smooth scrolling for navigation links
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function (e) {
+				e.preventDefault();
+
+				// Get the target element and account for fixed header height
+				const targetId = this.getAttribute('href').substring(1);
+				const targetElement = document.getElementById(targetId);
+
+				if (targetElement) {
+					const headerHeight = topNav.offsetHeight;
+					const targetPosition = targetElement.offsetTop - headerHeight - 20; // 20px extra padding
+
+					window.scrollTo({
+						top: targetPosition,
+						behavior: 'smooth'
+					});
+				}
+			});
+		});
+
+		// Scroll progress indicator
+		window.addEventListener('scroll', () => {
+			const scrollTop = document.documentElement.scrollTop;
+			const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+			const scrollProgress = scrollTop / scrollHeight;
+			document.documentElement.style.setProperty('--scroll', scrollProgress);
+		});
+
+		// Add loading animation
+		document.addEventListener('DOMContentLoaded', () => {
+			document.body.style.opacity = '0';
+			document.body.style.transform = 'translateY(20px)';
+			document.body.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+
+			setTimeout(() => {
+				document.body.style.opacity = '1';
+				document.body.style.transform = 'translateY(0)';
+			}, 100);
+		});
+	</script>
+</body>
+
+</html>

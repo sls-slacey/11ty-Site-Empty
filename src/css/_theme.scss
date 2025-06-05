@@ -1,0 +1,335 @@
+// Restaurant Theme - Creation
+// Based on the modern restaurant design
+
+// Brand Colors
+$primary-dark: #060d11; // Dark navy/black for headers/footers
+$primary-light: #2c2c2c; // Lighter dark for sections
+$accent-orange: #e5952d; // Golden orange for CTAs and highlights
+$accent-orange-hover: #e18610; // Darker orange for hover states
+
+// Text Colors
+$text-white: #ffffff;
+$text-light-gray: #b8b8b8;
+$text-dark-gray: #666666;
+$text-black: #333333;
+
+// Background Colors
+$bg-dark: #060d11;
+$bg-light: #ffffff;
+$bg-gray-light: #f8f9fa;
+$bg-overlay: rgba(5, 10, 19, 0.75);
+
+// Typography
+$font-primary: "Playfair Display", Georgia, serif; // Elegant serif for headings
+$font-secondary: "Montserrat", sans-serif;
+
+// Font Weights
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 900;
+
+// Font Sizes (Mobile First)
+$font-size-xs: 0.75rem; // 12px
+$font-size-sm: 0.875rem; // 14px
+$font-size-base: 1rem; // 16px
+$font-size-lg: 1.125rem; // 18px
+$font-size-xl: 1.25rem; // 20px
+$font-size-2xl: 1.5rem; // 24px
+$font-size-3xl: 1.875rem; // 30px
+$font-size-4xl: 2.25rem; // 36px
+$font-size-5xl: 3rem; // 48px
+
+// Desktop Font Sizes
+$font-size-2xl-desktop: 2rem; // 32px
+$font-size-3xl-desktop: 2.5rem; // 40px
+$font-size-4xl-desktop: 3rem; // 48px
+$font-size-5xl-desktop: 3.75rem; // 60px
+
+// Spacing Scale
+$spacing-xs: 0.25rem; // 4px
+$spacing-sm: 0.5rem; // 8px
+$spacing-md: 1rem; // 16px
+$spacing-lg: 1.5rem; // 24px
+$spacing-xl: 2rem; // 32px
+$spacing-2xl: 3rem; // 48px
+$spacing-3xl: 4rem; // 64px
+$spacing-4xl: 6rem; // 96px
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// Border Radius
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+// Transitions
+$transition-fast: 0.15s ease-in-out;
+$transition-normal: 0.3s ease-in-out;
+$transition-slow: 0.5s ease-in-out;
+
+// Global Styles
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-secondary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-regular;
+  line-height: 1.6;
+  color: $text-black;
+  background-color: $bg-light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Headings
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-primary;
+  font-weight: $font-weight-semibold;
+  line-height: 1.2;
+  margin-bottom: $spacing-md;
+  color: $text-black;
+}
+
+h1 {
+  font-size: $font-size-3xl;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: $font-size-4xl-desktop;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    font-size: $font-size-5xl-desktop;
+  }
+}
+
+h2 {
+  font-size: $font-size-2xl;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: $font-size-3xl-desktop;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    font-size: $font-size-4xl-desktop;
+  }
+}
+
+h3 {
+  font-size: $font-size-xl;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: $font-size-2xl;
+  }
+}
+
+h4 {
+  font-size: $font-size-lg;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: $font-size-xl;
+  }
+}
+
+h5 {
+  font-size: $font-size-base;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: $font-size-lg;
+  }
+}
+
+h6 {
+  font-size: $font-size-sm;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: $font-size-base;
+  }
+}
+
+// Paragraphs
+p {
+  margin-bottom: $spacing-md;
+  color: $text-dark-gray;
+  line-height: 1.7;
+}
+
+// Links
+a {
+  color: $accent-orange;
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $accent-orange-hover;
+  }
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md $spacing-xl;
+  font-family: $font-primary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-extrabold;
+  text-decoration: none;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-normal;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &-primary {
+    background-color: $accent-orange;
+    color: $text-white;
+
+    &:hover {
+      background-color: $accent-orange-hover;
+      color: $text-white;
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  &-outline {
+    background-color: transparent;
+    color: $text-white;
+    border: 2px solid $accent-orange;
+
+    &:hover {
+      background-color: $accent-orange;
+      color: $text-white;
+    }
+  }
+
+  &-lg {
+    padding: $spacing-lg $spacing-2xl;
+    font-size: $font-size-lg;
+  }
+}
+
+// Container
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+
+  @media (min-width: $breakpoint-sm) {
+    padding: 0 $spacing-lg;
+  }
+
+  @media (min-width: $breakpoint-md) {
+    padding: 0 $spacing-xl;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    padding: 0 $spacing-2xl;
+  }
+}
+
+// Section spacing
+.section {
+  padding: $spacing-3xl 0;
+
+  @media (min-width: $breakpoint-md) {
+    padding: $spacing-4xl 0;
+  }
+
+  &--dark {
+    background-color: $bg-dark;
+    color: $text-white;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: $text-white;
+    }
+
+    p {
+      color: $text-light-gray;
+    }
+  }
+
+  &--light-gray {
+    background-color: $bg-gray-light;
+  }
+}
+
+// Utilities
+.text-center {
+  text-align: center;
+}
+
+.text-white {
+  color: $text-white !important;
+}
+
+.text-accent {
+  color: $accent-orange !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+.mb-1 {
+  margin-bottom: $spacing-xs !important;
+}
+.mb-2 {
+  margin-bottom: $spacing-sm !important;
+}
+.mb-3 {
+  margin-bottom: $spacing-md !important;
+}
+.mb-4 {
+  margin-bottom: $spacing-lg !important;
+}
+.mb-5 {
+  margin-bottom: $spacing-xl !important;
+}
+
+.mt-0 {
+  margin-top: 0 !important;
+}
+.mt-1 {
+  margin-top: $spacing-xs !important;
+}
+.mt-2 {
+  margin-top: $spacing-sm !important;
+}
+.mt-3 {
+  margin-top: $spacing-md !important;
+}
+.mt-4 {
+  margin-top: $spacing-lg !important;
+}
+.mt-5 {
+  margin-top: $spacing-xl !important;
+}

@@ -1,0 +1,161 @@
+// Statistics Section Styles
+.stats {
+  padding: $spacing-2xl 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.5)),
+    url("../images/statistics.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll;
+  color: $text-white;
+
+  @media (min-width: $breakpoint-md) {
+    padding: $spacing-3xl 0;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    padding: $spacing-4xl 0;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    background-attachment: scroll; // Keep consistent scrolling behavior
+  }
+
+  &__container {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $spacing-xl;
+    width: 100%;
+
+    @media (min-width: $breakpoint-lg) {
+      gap: $spacing-xl;
+      flex-wrap: nowrap;
+    }
+  }
+
+  &__header {
+    flex: 1 1 100%;
+    text-align: center;
+
+    @media (min-width: $breakpoint-lg) {
+      flex: 0 0 auto;
+      text-align: left;
+      max-width: 400px;
+    }
+  }
+
+  &__subtitle {
+    font-family: $font-secondary;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
+    color: $accent-orange;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: $spacing-md;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-base;
+    }
+  }
+
+  &__title {
+    font-family: $font-primary;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $text-white;
+    margin-bottom: 0;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-2xl-desktop;
+    }
+  }
+
+  &__grid {
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    margin-left: auto;
+
+    @media (min-width: $breakpoint-sm) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+
+    @media (min-width: $breakpoint-lg) {
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+      gap: $spacing-sm;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: $spacing-md;
+    justify-content: center;
+    align-content: center;
+  }
+
+  &__icon-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-white;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    margin-right: 1rem;
+    flex-shrink: 0;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-xl;
+    }
+  }
+
+  &__number {
+    font-family: $font-primary;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    font-style: italic;
+    color: $text-white;
+    margin: 0;
+    display: block;
+    flex-shrink: 0;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-3xl;
+    }
+  }
+
+  &__label {
+    font-family: $font-secondary;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $white;
+    text-transform: none;
+    margin: 0;
+    white-space: nowrap;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-xs * 1.15;
+    }
+  }
+}

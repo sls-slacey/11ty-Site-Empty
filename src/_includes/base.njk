@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Creation Restaurant - Experience premium cuisine with fresh, local ingredients in an elegant atmosphere. Book your table today.">
+	<meta name="keywords" content="restaurant, fine dining, fresh ingredients, reservations, cuisine">
+	<meta name="author" content="Creation Restaurant">
+	
+	<title>{% if title %}{{ title }} - {% endif %}Creation Restaurant</title>
+	
+	<!-- Preconnect to Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900" rel="stylesheet">
+
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+	
+	<!-- Stylesheet -->
+	<link rel="stylesheet" href="{{ 'css/style.css' | url }}" />
+	
+	<!-- Favicon -->
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+	<!-- Header -->
+	{% include "header.njk" %}
+	
+	<!-- Main Content -->
+	<main role="main">
+		{{ content | safe }}
+	</main>
+	
+	<!-- Footer -->
+	{% include "footer.njk" %}
+	
+	<!-- Bootstrap JavaScript -->
+	<script src="{{ 'js/bootstrap.bundle.min.js' | url }}"></script>
+	
+	<!-- Mobile menu toggle animation -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const mobileToggle = document.querySelector('.header__mobile-toggle');
+			const mobileMenu = document.querySelector('#mobile-menu');
+			
+			if (mobileToggle && mobileMenu) {
+				mobileMenu.addEventListener('show.bs.collapse', function() {
+					mobileToggle.classList.add('active');
+				});
+				
+				mobileMenu.addEventListener('hide.bs.collapse', function() {
+					mobileToggle.classList.remove('active');
+				});
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+// Footer Component Styles
+.footer {
+  background-color: $primary-dark;
+  color: $text-white;
+
+  &__main {
+    padding: $spacing-3xl 0 $spacing-2xl;
+
+    @media (min-width: $breakpoint-md) {
+      padding: $spacing-4xl 0 $spacing-3xl;
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2xl;
+
+    @media (min-width: $breakpoint-md) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: $spacing-3xl;
+    }
+  }
+
+  &__brand {
+    text-align: center;
+
+    @media (min-width: $breakpoint-md) {
+      text-align: left;
+      flex: 1;
+      max-width: 50%;
+    }
+  }
+
+  &__logo {
+    font-family: $font-primary;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $text-white;
+    text-decoration: none;
+    letter-spacing: 1px;
+    margin-bottom: $spacing-md;
+    display: inline-block;
+
+    span {
+      color: $accent-orange;
+    }
+
+    @media (min-width: $breakpoint-md) {
+      font-size: $font-size-3xl;
+    }
+
+    &:hover {
+      color: $accent-orange;
+    }
+  }
+
+  &__description {
+    color: $text-light-gray;
+    margin: 0 auto;
+
+    @media (min-width: $breakpoint-md) {
+      margin: 0;
+    }
+  }
+
+  &__social-section {
+    text-align: center;
+
+    @media (min-width: $breakpoint-md) {
+      text-align: right;
+      flex: 1;
+      max-width: 50%;
+    }
+  }
+
+  &__social {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+
+    @media (min-width: $breakpoint-md) {
+      justify-content: flex-end;
+    }
+  }
+
+  &__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background-color: transparent;
+    //border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: $text-white;
+    text-decoration: none;
+    transition: all $transition-normal;
+    font-size: $font-size-lg;
+
+    &:hover {
+      background-color: $accent-orange;
+      border-color: $accent-orange;
+      color: $text-white;
+      transform: translateY(-2px);
+    }
+  }
+
+  &__search {
+    max-width: 300px;
+    margin: 0 auto;
+
+    @media (min-width: $breakpoint-md) {
+      margin: 0 0 0 auto;
+    }
+  }
+
+  &__search-form {
+    width: 100%;
+  }
+
+  &__search-input-wrapper {
+    display: flex;
+    align-items: stretch;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgb(18, 28, 49);
+    transition: border-color $transition-normal;
+
+    &:focus-within {
+      border-color: $primary-dark;
+    }
+  }
+
+  &__search-input {
+    flex: 1;
+    height: 44px;
+    padding: 0 $spacing-md;
+    background-color: rgb(37, 38, 40);
+    border: none;
+    border-radius: 0;
+    color: $text-white;
+    font-size: $font-size-sm;
+    transition: background-color $transition-normal;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &:focus {
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  &__search-button {
+    height: 44px;
+    width: 44px;
+    background-color: $accent-orange;
+    border: none;
+    color: $text-white;
+    cursor: pointer;
+    font-size: $font-size-base;
+    transition: all $transition-normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: darken($accent-orange, 10%);
+      color: $text-white;
+    }
+  }
+
+  &__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: $spacing-lg 0;
+
+    @media (min-width: $breakpoint-md) {
+      padding: $spacing-xl 0;
+    }
+  }
+
+  &__bottom-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-md;
+    text-align: center;
+
+    @media (min-width: $breakpoint-md) {
+      flex-direction: row;
+      justify-content: center;
+      text-align: left;
+    }
+  }
+
+  &__copyright {
+    color: $text-light-gray;
+    font-size: $font-size-sm;
+    margin: 0;
+  }
+
+  &__bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: $spacing-md;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @media (min-width: $breakpoint-md) {
+      justify-content: flex-end;
+    }
+  }
+
+  &__bottom-link {
+    color: $text-light-gray;
+    text-decoration: none;
+    font-size: $font-size-sm;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $accent-orange;
+    }
+  }
+}
