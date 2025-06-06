@@ -1,4 +1,5 @@
 @import "../../node_modules/bootstrap/scss/bootstrap"; // installed bootstrap through npm so when i build any unused css is removed
+@import "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss"; // Bootstrap Icons
 @import "reset"; // used to reduce or eliminate the default styling that browsers apply
 @import "theme"; // this is the website theme where i add variables for colors, fonts, etc.
 
@@ -11,6 +12,3 @@
 @import "menu";
 @import "testimonial";
 @import "reservation";
-
-// Bootstrap Icons - import the CSS content
-@import "bootstrap-icons";
